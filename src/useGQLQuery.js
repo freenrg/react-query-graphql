@@ -13,7 +13,5 @@ export const useGQLQuery = (key, query, variables, config = {}) => {
 
   const fetchData = async () => await graphQLClient.request(query, variables);
   
-  // const fetchData = async () => await request(endpoint, query, variables);
-
   return useQuery(key, fetchData, config);
 };

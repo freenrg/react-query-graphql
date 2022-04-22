@@ -1,50 +1,54 @@
 import { useITASQuery } from "./useITASQuery";
 import { useQueryClient } from "react-query";
+import { Fragment } from "react";
+import { useEffect } from "react/cjs/react.production.min";
 
-const GET_DEPARTMENTS = `
+const GET_DEPARTMENTS = entityString => `
     query {
-        Departments(TradingEntityId: "D1") {
+        Departments(TradingEntityId: "${entityString}") {
+            TradingEntityID
             DepartmentId
         }
     }
 `;
 
-const ItasData = () => {
+const ItasData = ({ entity }) => {
     const queryClient = useQueryClient();
+
+    console.log("GET_DEPARTMENTS(entity):", GET_DEPARTMENTS(entity));
+
     const { status, data, error, isFetching } = useITASQuery(
         "departments",
-        GET_DEPARTMENTS,
+        GET_DEPARTMENTS(entity),
         {}
     );
     console.log("ItasData: ", data);
+    // console.log("data.Data.Departments: ", data.Data.Departments);
 
-    return <h1>Hello from ItasQuery</h1>;
+    return (
+        <Fragment>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <h1>Departments in {entity}</h1>
+            <br />
+            <br />
+            {status === "loading" && <div>Loading data...</div>}
+
+            {status === "error" && <div>Error fetching data: {error}</div>}
+
+            {status === "success" &&
+                data.Data.Departments.map(dep => (
+                    <div key={dep.DepartmentId}>
+                        {dep.TradingEntityId} - {dep.DepartmentId}
+                    </div>
+                ))}
+        </Fragment>
+    );
 };
 
 export default ItasData;
-
-// -----------------------------
-
-// import gql from "graphql-tag";
-// import { useITASQuery } from "./useITASQuery";
-
-// const GET_DEPARTMENTS = gql`
-//     {
-//         Departments(TradingEntityId: "D1") {
-//             DepartmentId
-//         }
-//     }
-// `;
-
-// const ItasQuery = () => {
-//     const { data, isLoading, error } = useITASQuery(
-//         "departments",
-//         GET_DEPARTMENTS,
-//         {}
-//     );
-//     console.log(data);
-
-//     return <h1>Hello from ItasQuery</h1>;
-// };
-
-// export default ItasQuery;

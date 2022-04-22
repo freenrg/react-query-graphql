@@ -1,6 +1,9 @@
 import gql from "graphql-tag";
+import { useState } from "react";
 import { useGQLQuery } from "./useGQLQuery";
 import ItasData from "./ItasData";
+import Dropdown from "./Dropdown";
+import "./styles.css";
 
 const GET_COUNTRIES = gql`
     query {
@@ -12,71 +15,33 @@ const GET_COUNTRIES = gql`
 `;
 
 const App = () => {
-    // Fetch data from custom hook that uses React-Query
+    const [selectedEntity, setSelectedEntity] = useState("D1");
 
-    // (key, query, variables, config = {})
     const { data, isLoading, error } = useGQLQuery(
         "countries",
         GET_COUNTRIES,
         {}
     );
     console.log(data);
+    console.log("selectedEntity: ", selectedEntity);
 
     if (isLoading) return <div>Loading ...</div>;
     if (error) return <div>Something went wrong ...</div>;
 
     return (
         <div>
-            <ItasData />
-            {data.countries.map(country => (
+            <h3>Select: Entity</h3>
+            <Dropdown
+                selected={selectedEntity}
+                setSelected={setSelectedEntity}
+            />
+            <ItasData entity={selectedEntity} />
+
+            {/* {data.countries.map(country => (
                 <div key={country.name}>{country.name}</div>
-            ))}
+            ))} */}
         </div>
     );
 };
 
 export default App;
-
-// -----------------------------------
-
-// import gql from 'graphql-tag';
-// import { useGQLQuery } from './useGQLQuery';
-
-// const GET_COUNTRIES = gql`
-//   query {
-//     countries {
-//       code
-//       name
-//     }
-//   }
-// `;
-
-// const GET_COUNTRY = gql`
-//   query($code: ID!) {
-//     country(code: $code) {
-//       name
-//     }
-//   }
-// `;
-
-// const App = () => {
-//   // Fetch data from custom hook that uses React-Query
-//   const { data, isLoading, error } = useGQLQuery('countries', GET_COUNTRY, {
-//     code: 'SE'
-//   });
-//   console.log(data);
-
-//   if (isLoading) return <div>Loading ...</div>;
-//   if (error) return <div>Something went wrong ...</div>;
-
-//   return (
-//     <div>
-//       Country: {data.country.name}
-//       {/* {data.countries.map(country => (
-//         <div key={country.name}>{country.name}</div>
-//       ))} */}
-//     </div>
-//   );
-// };
-
-// export default App;

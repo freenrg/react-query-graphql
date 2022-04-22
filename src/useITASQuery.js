@@ -15,6 +15,12 @@ export const useITASQuery = (key, query, variables, config = {}) => {
             },
             data: query,
         });
+
+        console.log("within useITASQuery, right before returning data");
+        console.log(
+            "data (to be returned) within useITASQuery, right before returning data"
+        );
+
         return data;
     });
 };
