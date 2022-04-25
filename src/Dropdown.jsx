@@ -34,5 +34,3 @@ function Dropdown({ selected, setSelected }) {
 }
 
 export default Dropdown;
-
-// onMouseLeave={() => setIsActive(false)}
